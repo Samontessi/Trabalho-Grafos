@@ -1,0 +1,10 @@
+<Graph indexType="custom" height="400" width="400" nodes={[
+{label:"inicio"},
+{label:"11111"},
+{label:"x"},
+{label:"fim"}
+]} edges={[
+{label:"conexao",source:0,target:1},
+{source:1,target:2},
+{label:"3",source:2,target:3}
+]} />
