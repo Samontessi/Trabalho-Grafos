@@ -29,4 +29,6 @@ class Grafo {
         vector<int> listarVizinhos(int v) const; // retorna um vetor com os índices dos vizinhos de v
         bool saoAdjacentes(int u, int v) const; // retorna true se u e v são adjacentes (ou seja, existe uma aresta entre eles)
         void limpar(); // limpa o grafo, removendo todos os vértices e arestas
+        int getNumVertices() const; // retorna o número de vértices do grafo
+        int getNumArestas() const; // retorna o número de arestas do grafo
 };

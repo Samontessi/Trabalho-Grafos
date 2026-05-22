@@ -212,6 +212,16 @@ bool Grafo::saoAdjacentes(int u, int v) const
     return verificaAresta(u, v);
 }
 
+int Grafo::getNumVertices() const
+{
+    return this->numVertices;
+}
+
+int Grafo::getNumArestas() const
+{
+    return this->numArestas;
+}
+
 void Grafo::limpar()
 {
     vertices.clear();
