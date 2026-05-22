@@ -7,11 +7,16 @@ Grafo::Grafo(bool digrafo){
     this->numArestas = 0;
 }
 
+// Valida se v é um índice de vértice existente, evitando acessos fora dos limites
+bool Grafo::indiceValido(int v) const {
+    return v >= 0 && v < this->numVertices;
+}
+
 int Grafo::insereVertice(){
     No novoNo(this->numVertices);
     this->vertices.push_back(novoNo);
-    this->numVertices++;   
-    return this->numVertices - 1; 
+    this->numVertices++;
+    return this->numVertices - 1;
 }
 
 void Grafo::insereVertice(int id){
@@ -20,30 +25,62 @@ void Grafo::insereVertice(int id){
     this->numVertices++;
 }
 
-void Grafo::insereAresta(int v1, int v2, int peso){
+void Grafo::insereAresta(int v1, int v2, double peso){
+    if(!indiceValido(v1) || !indiceValido(v2)) return;
+
     this->vertices[v1].vizinhos.push_back({v2, peso});
     if(!digrafo){
         this->vertices[v2].vizinhos.push_back({v1, peso});
     }
+    this->numArestas++; // conta a aresta lógica uma única vez (orientada ou não)
 }
 
 void Grafo::removeVertice(int v){
+    if(!indiceValido(v)) return;
+
+    // Atualiza o contador de arestas com base nas arestas incidentes a v
+    if(this->digrafo){
+        this->numArestas -= (int)this->vertices[v].vizinhos.size(); // arcos de saída
+        for(int i = 0; i < this->numVertices; i++){               // arcos de entrada
+            if(i == v) continue;
+            for(const pair<int, double> &viz : this->vertices[i].vizinhos)
+                if(viz.first == v) this->numArestas--;
+        }
+    } else {
+        // cada aresta não orientada incidente aparece exatamente uma vez na lista de v
+        this->numArestas -= (int)this->vertices[v].vizinhos.size();
+    }
+
+    // Remove o vértice do vetor
     this->vertices.erase(this->vertices.begin() + v);
     this->numVertices--;
+
+    // Remove referências a v e reindexa as referências > v, pois os índices
+    // dos vértices seguintes deslocaram uma posição para trás
     for(No &no : this->vertices) {
-        for(int i = 0; i < (int)no.vizinhos.size(); i++) {
+        for(int i = 0; i < (int)no.vizinhos.size(); ) {
             if(no.vizinhos[i].first == v){
                 no.vizinhos.erase(no.vizinhos.begin() + i);
-                i--;
+            } else {
+                if(no.vizinhos[i].first > v) no.vizinhos[i].first--;
+                i++;
             }
         }
     }
+
+    // Mantém o invariante id == índice após o deslocamento
+    for(int i = 0; i < this->numVertices; i++)
+        this->vertices[i].id = i;
 }
 
 void Grafo::removeAresta(int v1, int v2){
+    if(!indiceValido(v1) || !indiceValido(v2)) return;
+
+    bool removeu = false;
     for(int i = 0; i < (int)this->vertices[v1].vizinhos.size(); i++) {
         if(this->vertices[v1].vizinhos[i].first == v2){
             this->vertices[v1].vizinhos.erase(this->vertices[v1].vizinhos.begin() + i);
+            removeu = true;
             break;
         }
     }
@@ -55,10 +92,12 @@ void Grafo::removeAresta(int v1, int v2){
             }
         }
     }
-    this->numArestas--;
+    if(removeu) this->numArestas--; // só decrementa se a aresta realmente existia
 }
 
 bool Grafo::verificaAresta(int v1, int v2){
+    if(!indiceValido(v1) || !indiceValido(v2)) return false;
+
     for(int i = 0; i < (int)this->vertices[v1].vizinhos.size(); i++) {
         if(this->vertices[v1].vizinhos[i].first == v2){
             return true;
@@ -67,7 +106,9 @@ bool Grafo::verificaAresta(int v1, int v2){
     return false;
 }
 
-void Grafo::alteraPesoAresta(int v1, int v2, int peso){
+void Grafo::alteraPesoAresta(int v1, int v2, double peso){
+    if(!indiceValido(v1) || !indiceValido(v2)) return;
+
     for(int i = 0; i < (int)this->vertices[v1].vizinhos.size(); i++) {
         if(this->vertices[v1].vizinhos[i].first == v2){
             this->vertices[v1].vizinhos[i].second = peso;
@@ -87,7 +128,7 @@ void Grafo::alteraPesoAresta(int v1, int v2, int peso){
 void Grafo::imprime(){
     for(No no : this->vertices) {
         cout << "Vertice " << no.id << ": ";
-        for(pair<int, int> vizinho : no.vizinhos) {
+        for(pair<int, double> vizinho : no.vizinhos) {
             cout << "(" << vizinho.first << ", " << vizinho.second << ") ";
         }
         cout << endl;
