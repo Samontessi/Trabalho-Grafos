@@ -1,16 +1,42 @@
 #include <iostream>
-#include "estrutura/Grafo.cpp"// h" Bugue do vscode/antigravity
+
+#include "estrutura/Grafo.h"
+#include "Leitor.h"
 
 using namespace std;
 
-int main() {
-    Grafo grafo(false);
-    grafo.insereVertice();
-    grafo.insereVertice();
-    grafo.insereVertice();
-    grafo.insereAresta(0, 1, 10);
-    grafo.insereAresta(0, 2, 20);
-    grafo.insereAresta(1, 2, 30);
+int main(int argc, char* argv[])
+{
+
+    if (argc < 2)
+    {
+        cerr << "Uso: " << argv[0] << " <arquivo> [--orientado]\n";
+        return 1;
+    }
+
+    string caminho = argv[1];
+    string opcaoOrientacao = (argc >= 3) ? argv[2] : "";
+    bool orientado = (opcaoOrientacao == "--orientado");
+    Grafo grafo(orientado);
+
+    if (!Leitor::lerArquivo(caminho, grafo))
+    {
+        cerr << "Falha ao carregar arquivo.\n";
+        return 1;
+    }
+
+    cout << "Grafo carregado com sucesso.\n\n";
+
     grafo.imprime();
+
+    cout << "\nTeste de operacoes:\n";
+
+    for (int i = 0; i < 6; i++)
+    {
+        cout << "Grau do vertice " << i
+             << ": "
+             << grafo.grauVertice(i)
+             << endl;
+    }
     return 0;
 }

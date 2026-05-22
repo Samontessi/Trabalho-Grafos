@@ -6,11 +6,11 @@ BINDIR   = output
 
 all: $(BINDIR)/main $(BINDIR)/testall
 
-$(BINDIR)/main: main.cpp estrutura/Grafo.cpp estrutura/Grafo.h estrutura/No.h
-	$(CXX) $(CXXFLAGS) main.cpp -o $@
+$(BINDIR)/main: main.cpp estrutura/Grafo.cpp estrutura/Grafo.h estrutura/No.h io/Leitor.cpp io/Leitor.h
+	$(CXX) $(CXXFLAGS) -Iestrutura -Iio main.cpp estrutura/Grafo.cpp io/Leitor.cpp -o $@
 
-$(BINDIR)/testall: testall.cpp estrutura/Grafo.cpp estrutura/Grafo.h estrutura/No.h
-	$(CXX) $(CXXFLAGS) testall.cpp -o $@
+$(BINDIR)/testall: testall.cpp estrutura/Grafo.cpp estrutura/Grafo.h estrutura/No.h io/Leitor.cpp io/Leitor.h
+	$(CXX) $(CXXFLAGS) -Iestrutura -Iio testall.cpp io/Leitor.cpp -o $@
 
 # --- Atalhos de execução ---
 
