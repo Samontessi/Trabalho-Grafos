@@ -22,7 +22,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "estrutura/Grafo.cpp" // estrutura real do grupo (lista de adjacência)
+#include "estrutura/Grafo.h" // estrutura real do grupo (lista de adjacência)
 
 // ============================================================================
 // WRAPPER MeuGrafo: traduz os nomes esperados pelo testAll() para os métodos
