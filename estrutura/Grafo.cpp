@@ -237,9 +237,10 @@ void Grafo::limpar()
 vector<int> Grafo::ordenacaoTopologica() const
 {
     // Ordenação topológica só faz sentido em dígrafos.
-    if (!digrafo)
+    if (!digrafo){
+        cout << "Não é um dígrafo." << endl;
         return {};
-
+    }
     // 1. Calcula o grau de entrada de cada vértice.
     vector<int> grauEntrada(numVertices, 0);
     for (int i = 0; i < numVertices; i++)
@@ -272,8 +273,9 @@ vector<int> Grafo::ordenacaoTopologica() const
     }
 
     // 4. Se nem todos os vértices foram processados, há um ciclo.
-    if ((int)ordem.size() != numVertices)
+    if ((int)ordem.size() != numVertices){
+        cout << "O grafo é cíclico." << endl;
         return {};
-
+    }
     return ordem;
 }
