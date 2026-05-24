@@ -71,8 +71,12 @@ Quando `--orientado` é informado, o grafo é carregado como orientado. Caso con
 
 Para executar a bateria de testes:
 
+## Menu
+
+Para ter acesso ao menu de importação e inserção manual de grafos, assim como as opções de edição do grafo carregado, execute com:
+
 ```bash
-./output/testall
+make run
 ```
 
 ## Limpeza
