@@ -88,6 +88,11 @@ static void exibirResumo(Grafo &grafo)
     cout << "  Arestas:  " << grafo.getNumArestas() << "\n";
     for (int i = 0; i < grafo.getNumVertices(); i++)
         cout << "  Grau do vertice " << i << ": " << grafo.grauVertice(i) << "\n";
+    cout << "Ordenacao topologica: \n";
+    vector<int> ordem = grafo.ordenacaoTopologica();
+    for (int v : ordem)
+        cout << v << " ";
+    cout << "\n";
 }
 
 int main(int argc, char *argv[])

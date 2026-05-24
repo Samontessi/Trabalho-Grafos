@@ -31,4 +31,5 @@ class Grafo {
         void limpar(); // limpa o grafo, removendo todos os vértices e arestas
         int getNumVertices() const; // retorna o número de vértices do grafo
         int getNumArestas() const; // retorna o número de arestas do grafo
+        vector<int> ordenacaoTopologica() const; // retorna a ordenação topológica (Kahn); vetor vazio se houver ciclo ou grafo não for digrafo
 };

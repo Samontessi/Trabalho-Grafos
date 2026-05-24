@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <queue>
 Grafo::Grafo(bool digrafo)
 {
     this->digrafo = digrafo;
@@ -228,4 +229,51 @@ void Grafo::limpar()
 
     numVertices = 0;
     numArestas = 0;
+}
+
+// Algoritmo de Kahn (BFS).
+// Retorna a ordenação topológica dos vértices (por índice).
+// Se o grafo contiver um ciclo, ou não for um dígrafo, retorna vetor vazio.
+vector<int> Grafo::ordenacaoTopologica() const
+{
+    // Ordenação topológica só faz sentido em dígrafos.
+    if (!digrafo)
+        return {};
+
+    // 1. Calcula o grau de entrada de cada vértice.
+    vector<int> grauEntrada(numVertices, 0);
+    for (int i = 0; i < numVertices; i++)
+        for (const pair<int, double> &viz : vertices[i].vizinhos)
+            grauEntrada[viz.first]++;
+
+    // 2. Enfileira todos os vértices com grau de entrada 0.
+    queue<int> fila;
+    for (int i = 0; i < numVertices; i++)
+        if (grauEntrada[i] == 0)
+            fila.push(i);
+
+    // 3. Processa a fila, removendo arestas virtualmente.
+    vector<int> ordem;
+    ordem.reserve(numVertices);
+
+    while (!fila.empty())
+    {
+        int i = fila.front();
+        fila.pop();
+        ordem.push_back(i);
+
+        for (const pair<int, double> &viz : vertices[i].vizinhos)
+        {
+            int v = viz.first;
+            grauEntrada[v]--;
+            if (grauEntrada[v] == 0)
+                fila.push(v);
+        }
+    }
+
+    // 4. Se nem todos os vértices foram processados, há um ciclo.
+    if ((int)ordem.size() != numVertices)
+        return {};
+
+    return ordem;
 }
