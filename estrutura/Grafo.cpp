@@ -172,7 +172,7 @@ void Grafo::imprime()
 {
     for (No no : this->vertices)
     {
-        cout << "Vertice " << no.id << ": ";
+        cout << "  Vertice " << no.id << ": ";
         for (pair<int, double> vizinho : no.vizinhos)
         {
             cout << "(" << vizinho.first << ", " << vizinho.second << ") ";
